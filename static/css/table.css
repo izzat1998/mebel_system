@@ -1,0 +1,26 @@
+.thead-dark{
+    background-color: #1e262d;
+}
+#tbody{
+    color: black;
+    font-size: 15px;
+}
+
+
+
+/*#table{*/
+    /*color: black;*/
+    /*font-family: "Times New Roman", sans-serif;*/
+    /*background-color: #5e5859;*/
+/*}*/
+/*.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {*/
+    /*border: 1px solid #1e262d;*/
+/*}*/
+/*th, td ,tr {*/
+    /*border-right: 1px solid #1e262d;*/
+    /*padding: 5px;*/
+/*}*/
+
+/*th:last-child, td:last-child {*/
+    /*border-right: none;*/
+/*}*/

@@ -1,0 +1,14 @@
+.pagination{
+    text-align: center;
+    font-size: 140%;
+    margin: 15px auto;
+}
+.pagination a {
+    color: black !important;
+    padding: 8px 8px;
+    text-decoration: none;
+}
+
+.pagination-current {
+    background-color: #4CAF50;
+}

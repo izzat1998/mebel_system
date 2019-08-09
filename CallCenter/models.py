@@ -1,0 +1,12 @@
+from django.db import models
+
+from Questionnaire.models import Visited
+
+
+class CalCenterClient(models.Model):
+    call_content = models.TextField(blank=True, default="", null=True)
+    visitor = models.ForeignKey(Visited, blank=True, on_delete=models.CASCADE, null=True, related_name='callers')
+    date_pub = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.call_content

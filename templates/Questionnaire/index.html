@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div>
+            <canvas id="myChart2" width="500" height="400"></canvas>
+        </div>
+    </div>
+    <div class="card card-5">
+        <table class="table table-bordered " style="margin-top: 25px;">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Имя клиента</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Филиал</th>
+                <th scope="col">Откуда Узнал</th>
+                <th scope="col">Номер Телефона</th>
+                <th scope="col">Характер</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Другие магазины</th>
+                <th scope="col">Категория</th>
+                <th scope="col">Тип мебели</th>
+                <th scope="col">Цвет</th>
+                <th scope="col">Нюансы</th>
+                <th scope="col">Консультант</th>
+                <th scope="col">Добавлено</th>
+                <th scope="col">
+                    <button type="button" class="btn btn-danger">Удалить</button>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {% for post in posts %}
+                {% for visitor in post.visitors.all %}
+                    <tr>
+                        <th scope="row">{{ post.id }}</th>
+                        <td>{{ post.name }}</td>
+                        <td>{{ visitor.date }}</td>
+                        <td>{{ visitor.filial }}</td>
+                        <td>{{ visitor.find_out }}</td>
+                        <td>{{ post.phone_number }}</td>
+                        <td>{{ post.character }}</td>
+                        <td>{{ post.status }}</td>
+                        <td>{{ visitor.other_shop }}</td>
+                        <td>{% for post in visitor.category.all %}{{ post }}{% endfor %}</td>
+                        <td>{{ visitor.type_furniture }}</td>
+                        <td>{{ visitor.color }}</td>
+                        <td>{{ visitor.nuance }}</td>
+                        <td>{{ visitor.consultant }}</td>
+                        <td>{{ post.date_pub }}</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if  post.has_other_pages %}
+            <ul class="pagination">
+                {% if post.has_previous %}
+                    <li><a href="?page={{ post.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in post.paginator.page_range %}
+                    {% if users.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% elif i > post.number|add:'-5' and i < post.number|add:'5' %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if post.has_next %}
+                    <li><a href="?page={{ post.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+    <script>
+        var counter = 0;
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        var c = url.search.indexOf('?') !== -1 ? url.search.substr(0) : url.search;
+        var chartJS = {};
+        var chart2 = document.getElementById('myChart2').getContext('2d');
+
+        async function httpGet(url) {
+
+            return new Promise(function (resolve, reject) {
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+
+                xhr.onload = function () {
+                    if (this.status == 200) {
+                        resolve(this.response);
+                    } else {
+                        var error = new Error(this.statusText);
+                        error.code = this.status;
+                        reject(error);
+                    }
+                };
+
+                xhr.onerror = function () {
+                    reject(new Error("Network Error"));
+                };
+
+                xhr.send();
+            });
+
+        }
+
+
+        var chartArr = {
+            chart2: {
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '# Спрос на товар',
+                        data: [],
+                        backgroundColor: ['red', 'yellow', 'blue', 'green', 'chocolate', 'Cyan', 'Brown'],
+                        borderColor: ['red', 'yellow', 'blue', 'green', 'chocolate', 'Cyan', 'Brown'],
+                        borderWidth: 1
+                    }]
+                },
+                type: "bar",
+                ctx: chart2
+            },
+        };
+
+        for (var key in chartArr) {
+            var item = chartArr[key];
+            if (chartArr.hasOwnProperty(key)) {
+                chartJS[item.type] = new Chart(item.ctx, {
+                    type: item.type,
+                    data: item.data,
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        }
+
+        {#httpGet('http://127.0.0.1:3000/api/test/?from=2020-02-01&to=2020-11-30&category=%D0%A1%D0%BF%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20%D0%B3%D0%B0%D1%80%D0%BD%D0%B8%D1%82%D1%83%D1%80,%D0%9F%D0%B5%D0%BD%D0%B0%D0%BB-%D0%BA%D0%BE%D0%BC%D0%BE%D0%B4,%D0%9A%D0%BE%D0%BC%D0%BE%D0%B4,%D0%A3%D0%B3%D0%BB%D0%BE%D0%B2%D0%BE%D0%B9%20%D0%BF%D0%B5%D0%BD%D0%B0%D0%BB,%D0%94%D0%B8%D0%B2%D0%B0%D0%BD%20%D0%BA%D1%80%D0%B5%D1%81%D0%BB%D0%BE,%D0%9C%D1%8F%D0%B3%D0%BA%D0%B8%D0%B9%20%D1%83%D0%B3%D0%BE%D0%BB%D0%BE%D0%BA,%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20%D0%B4%D0%B8%D0%B2%D0%B0%D0%BD,%D0%94%D0%B8%D0%B2%D0%B0%D0%BD-%D0%BA%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C')#}
+        {#    .then(response => {#}
+        {#        console.log('response', response);#}
+        {#        let res = JSON.parse(response);#}
+        {#        for (i = 0; i < res.length; i++) {#}
+        {#            chartArr.chart2.data.labels[i] = [res[i].category];#}
+        {#            chartArr.chart2.data.datasets[0].data[i] = [res[i].count];#}
+        {##}
+        {#        }#}
+        {#        chartJS.bar.update();#}
+        {#        counter++;#}
+        {#    });#}
+
+        httpGet('/api/test/' + c)
+            .then(response => {
+                console.log('response', response);
+                let res = JSON.parse(response);
+                for (i = 0; i < res.length; i++) {
+                    chartArr.chart2.data.labels[i] = [res[i].category];
+                    chartArr.chart2.data.datasets[0].data[i] = [res[i].count];
+
+                }
+                chartJS.bar.update();
+                counter++;
+            });
+
+
+    </script>
+
+
+
+
+{% endblock %}
+

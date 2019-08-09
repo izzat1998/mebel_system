@@ -1,0 +1,401 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-1">
+                    <table class="table table-bordered" style="margin-top: 25px;">
+                        <form id="urlchanger" action="{% url 'questionnaire' %}?" method="post">
+                            {% csrf_token %}
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">ОТ : <input class="from_date" type="date" name="from">
+                                    ДО:<input class="to_date" type="date" name="to">
+                                    <input type="submit" class="oprosnik-btn" name="submit" value="Отправить">
+                                </th>
+                            </tr>
+
+
+                            </thead>
+                        </form>
+                    </table>
+                </div>
+                <div class="card card-1" style="margin-top: 25px;">
+                    <div class="TenDayStatistic">
+                        <table class="table table-bordered ">
+
+                            <thead class="thead-dark ">
+                            <tr>
+                                <th>ежедневная статистика</th>
+                                <th>1-10</th>
+                                <th>10-20</th>
+                                <th>20-30</th>
+                                <th>общее</th>
+                            </tr>
+
+                            </thead>
+                            <tbody class="tbody-statistik">
+                            <tr>
+                                <td>Количество клиентов</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Среднее количество</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                            <tr>
+                                <td>Минимальное</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+
+                <div>
+                    <canvas style="background-color:white; " id="myChart2" width="800px" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <table class="table table-bordered " style="background: aliceblue;  margin-top: 25px;">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя клиента</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Филиал</th>
+            <th scope="col">Откуда Узнал</th>
+            <th scope="col">Номер Телефона</th>
+            <th scope="col">Характер</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Другие магазины</th>
+            <th scope="col">Категория</th>
+            <th scope="col">Тип мебели</th>
+            <th scope="col">Цвет</th>
+            <th scope="col">Нюансы</th>
+            <th scope="col">Консультант</th>
+            <th scope="col">Добавлено</th>
+            <th scope="col">
+                <button type="button" class="btn btn-danger">Удалить</button>
+            </th>
+        </tr>
+        </thead>
+        <tbody id="tbody-post">
+        {% for post in post %}
+            {% for visitor in post.visitors.all %}
+                <tr {% if visitor.filial.name == 'Себзор' %}
+                        style="background:#90CAF9"
+
+                    {% elif visitor.filial.name == 'Хамза' %}
+                        style="background:indianred"
+                    {% elif visitor.filial.name == 'Октепа' %}
+                        style="background:#B2FF59"
+                    {% endif %}>
+
+                    <th scope="row">{{ post.id }}</th>
+                    <td>{{ post.name }}</td>
+                    <td>{{ visitor.date }}</td>
+                    <td >
+                        {{ visitor.filial }}
+                    </td>
+                    <td>{{ visitor.find_out }}</td>
+                    <td>{{ post.phone_number }}</td>
+                    <td>{{ post.character }}</td>
+                    <td>{{ post.status }}</td>
+                    <td>{{ visitor.other_shop }}</td>
+                    <td>{% for post in visitor.category.all %}{{ post }}{% endfor %}</td>
+                    <td>{{ visitor.type_furniture }}</td>
+                    <td>{{ visitor.color }}</td>
+                    <td>{{ visitor.nuance }}</td>
+                    <td>{{ visitor.consultant }}</td>
+                    <td>{{ post.date_pub }}</td>
+                    <td><input type="checkbox"></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if  post.has_other_pages %}
+        <ul class="pagination">
+            {% if post.has_previous %}
+                <li><a href="?page={{ post.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in post.paginator.page_range %}
+                {% if users.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% elif i > post.number|add:'-5' and i < post.number|add:'5' %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if post.has_next %}
+                <li><a href="?page={{ post.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+    {% block script %}
+
+
+        <script>
+            function initial() {
+                var location = window.location.href;
+                var arr = ['Себзор', 'Хамза', 'Октепа'];
+                var x = "filial=" + arr.join(",");
+                if (location.split("?").length > 1) {
+                    var prev = location.split("?")[1].split("&")[0].split("=")[1];
+                    var next = location.split("?")[1].split("&")[1].split("=")[1];
+                    $(".from_date").val(prev);
+                    $(".to_date").val(next);
+                    httpGet('http://127.0.0.1:3000/api/customercount/?' + location.split("?")[1] + '&' + x)
+                        .then(response => {
+
+                                max_count = 0;
+                                average_count = 0;
+                                min_count = 0;
+
+                                let res = JSON.parse(response);
+                                for (j = 0; j < res[0].Себзор.length; j++) {
+                                    max_count = max_count + res[0].Себзор[j].count;
+                                    chartArr.chart2.data.labels[j] = [res[0].Себзор[j].date];
+                                    chartArr.chart2.data.datasets[0].data[j] = [res[0].Себзор[j].count];
+                                }
+                                for (j = 0; j < res[1].Хамза.length; j++) {
+                                    max_count = max_count + res[1].Хамза[j].count;
+                                    chartArr.chart2.data.datasets[1].data[j] = [res[1].Хамза[j].count];
+                                }
+                                for (j = 0; j < res[2].Октепа.length; j++) {
+                                    max_count = max_count + res[2].Октепа[j].count;
+                                    chartArr.chart2.data.datasets[2].data[j] = [res[2].Октепа[j].count];
+                                }
+
+                                average_count = (max_count / res[0].Себзор.length);
+                                paintIt(max_count, average_count, min_count, 10);
+
+
+                                chartArr.chart2.data.datasets[0].label = 'Себзор';
+                                chartArr.chart2.data.datasets[1].label = 'Хамза';
+                                chartArr.chart2.data.datasets[2].label = 'Октепа';
+
+
+                                chartJS.line.update();
+                            }
+                        );
+                } else {
+                    httpGet('/api/ten_day_count')
+                        .then(response => {
+                            let res = JSON.parse(response);
+                            max_count = 0;
+                            average_count = 0;
+                            min_count = 0;
+
+                            for (j = 0; j < res[0].Себзор.length; j++) {
+                                max_count = max_count + res[0].Себзор[j].count;
+                                chartArr.chart2.data.labels[j] = [res[0].Себзор[j].date];
+                                chartArr.chart2.data.datasets[0].data[j] = [res[0].Себзор[j].count];
+                            }
+                            for (j = 0; j < res[1].Хамза.length; j++) {
+                                max_count = max_count + res[1].Хамза[j].count;
+                                chartArr.chart2.data.datasets[1].data[j] = [res[1].Хамза[j].count];
+                            }
+                            for (j = 0; j < res[2].Октепа.length; j++) {
+                                max_count = max_count + res[2].Октепа[j].count;
+                                chartArr.chart2.data.datasets[2].data[j] = [res[2].Октепа[j].count];
+                            }
+
+                            average_count = Math.round(max_count / res[0].Себзор.length);
+
+                            paintIt(max_count, average_count, min_count);
+
+                            chartArr.chart2.data.datasets[0].label = 'Себзор';
+                            chartArr.chart2.data.datasets[1].label = 'Хамза';
+                            chartArr.chart2.data.datasets[2].label = 'Октепа';
+
+
+                            chartJS.line.update();
+
+                        });
+
+                }
+            }
+
+            function paintIt() {
+                var today = new Date();
+                today = today.getDate();
+                today = 31;
+                if (today = 31) {
+                    today = 30;
+                }
+                var q = Math.ceil(today / 10);
+                var row = document.getElementsByClassName("tbody-statistik")[0].getElementsByTagName("tr");
+                for (var i = 0; i < row.length; i++) {
+                    var col = row[i].getElementsByTagName("td");
+                    col[q].style.backgroundColor = "green";
+
+                }
+
+            }
+
+            paintIt();
+            $('.oprosnik-btn').on('click', function (e) {
+                var arr = ['Себзор', 'Хамза', 'Октепа'];
+                var arr2 = [];
+                var date_from = $('.from_date');
+                var date_to = $('.to_date');
+                var fromTo = "from=" + date_from[0].value + "&to=" + date_to[0].value;
+                var form = document.getElementById("urlchanger");
+                form.action += fromTo;
+
+            });
+
+            var chartJS = {};
+
+            var chart2 = document.getElementById('myChart2').getContext('2d');
+
+
+            function httpGet(url) {
+
+                return new Promise(function (resolve, reject) {
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', url, true);
+
+                    xhr.onload = function () {
+                        if (this.status == 200) {
+                            resolve(this.response);
+                        } else {
+                            var error = new Error(this.statusText);
+                            error.code = this.status;
+                            reject(error);
+                        }
+                    };
+
+                    xhr.onerror = function () {
+                        reject(new Error("Network Error"));
+                    };
+
+                    xhr.send();
+                });
+
+            }
+
+            initial();
+
+            function paintIt(max, average, min, another_day = 0) {
+
+                points = [max, average, min];
+                var today = new Date();
+                today = today.getDate();
+                today = 31;
+                if (today = 31) {
+                    today = 30;
+                }
+                if (another_day > 0) {
+                    today = 32;
+                }
+                var q = Math.ceil(today / 10);
+                var row = document.getElementsByClassName("tbody-statistik")[0].getElementsByTagName("tr");
+                for (var i = 0; i < row.length; i++) {
+                    var col = row[i].getElementsByTagName("td");
+                    col[q].style.backgroundColor = "green";
+                    col[q].style.color = "white";
+                    col[q].innerHTML = points[i];
+                }
+
+            }
+
+            var chartArr = {
+                chart2: {
+                    data: {
+                        labels: ['03.07.2019', '04.07.2019', '05.07.2019', '06.07.2019', '07.07.2019', '08.07.2019', '09.07.2019'],
+                        datasets: [{
+                            label: '',
+                            data: [2, 4, 5, 6, 7, 3, 1],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0)',
+                            ],
+                            borderColor: [
+                                'rgba(107, 185, 240, 1)',
+                            ],
+                            borderWidth: 2
+
+                        },
+                            {
+                                label: 'B',
+                                data: [7, 5, 3, 1, 6, 4],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                ],
+                                borderWidth: 2
+                            },
+                            {
+                                label: 'C',
+                                data: [5, 4, 5, 2, 2, 3, 1],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0)',
+                                ],
+                                borderColor: [
+                                    'rgba(0, 230, 64, 1)',
+                                ],
+                                borderWidth: 2
+                            }
+                        ]
+                    },
+                    type: "line",
+                    ctx: chart2
+                },
+            };
+
+            for (var key in chartArr) {
+                var item = chartArr[key];
+                if (chartArr.hasOwnProperty(key)) {
+                    chartJS[item.type] = new Chart(item.ctx, {
+                        type: item.type,
+                        data: item.data,
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            },
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+            }
+        </script>
+
+    {% endblock %}
+
+
+{% endblock %}

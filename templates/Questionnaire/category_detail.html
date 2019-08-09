@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container-fluid" style="margin-top: 25px">
+            <table class="table table-bordered ">
+          <thead class="thead-dark" >
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Имя клиента</th>
+              <th scope="col">Дата</th>
+              <th scope="col">Филиал</th>
+              <th scope="col">Откуда Узнал</th>
+              <th scope="col">Номер Телефона</th>
+              <th scope="col">Характер</th>
+              <th scope="col">Статус</th>
+              <th scope="col">Другие магазины</th>
+              <th scope="col">Категория</th>
+              <th scope="col">Тип мебели </th>
+              <th scope="col">Цвет</th>
+              <th scope="col">Нюансы </th>
+              <th scope="col">Консультант </th>
+              <th scope="col">Добавлено </th>
+                <th scope="col"> <button type="button" class="btn btn-danger">Удалить</button></th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+          {% for post in category.post_category.all %}
+              <tr>
+              <th scope="row">
+                  {{ post.id }}</th>
+              <td>{{ post.visitor.name }}</td>
+              <td>{{ post.date }}</td>
+              <td>{{ post.filial }}</td>
+              <td>{{ post.find_out }}</td>
+              <td>{{ post.visitor.phone_number }}</td>
+              <td>{{ post.visitor.character }}</td>
+              <td>{{ post.visitor.status }}</td>
+              <td>{{ post.other_shop }}</td>
+              <td>{% for post in post.category.all %}{{ post }}{% endfor %}</td>
+              <td>{{ post.type_furniture }}</td>
+              <td>{{ post.color }}</td>
+              <td>{{ post.nuance }}</td>
+              <td>{{ post.consultant }}</td>
+              <td>{{ post.date_pub }}</td>
+            </tr>
+           {% endfor %}
+  </tbody>
+
+
+</table>
+    </div>
+{% endblock %}

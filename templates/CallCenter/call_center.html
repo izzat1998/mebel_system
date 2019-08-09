@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card card-1">
+                    <table class="table table-bordered " style="margin-top: 25px;">
+                        <thead class="thead-dark">
+                        <h4>Необработанные клиенты</h4>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Имя клиента</th>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Филиал</th>
+                            <th scope="col">Cтатус</th>
+                            <th scope="col">Номер Телефона</th>
+                            <th scope="col">Консультант</th>
+                            <th scope="col">
+                                <button type="button" class="btn btn-danger">Удалить</button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        {% for post in post %}
+                            <tr class="call_center_row">
+                                <th scope="row">{{ post.visitors.id }}</th>
+                                <td>{{ post.visitor.name }}</td>
+                                <td>{{ post.date }}</td>
+                                <td>{{ post.filial }}</td>
+                                <td>{{ post.visitor.status }}</td>
+                                <td>{{ post.visitor.phone_number }}</td>
+                                <td>{{ post.consultant }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    >
+                                        <a id="{{ post.id }}" onclick="getInfo({{ post.id }})">Инфо</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if  post.has_other_pages %}
+                        <ul class="pagination">
+                            {% if post.has_previous %}
+                                <li><a href="?page={{ post.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in post.paginator.page_range %}
+                                {% if users.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% elif i > post.number|add:'-5' and i < post.number|add:'5' %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if post.has_next %}
+                                <li><a href="?page={{ post.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card card-1">
+                    <table class="table table-bordered " style="margin-top: 25px;">
+                        <thead class="thead-dark">
+                        <h4>Обработанные клиенты</h4>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Имя клиента</th>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Время</th>
+                            <th scope="col">Филиал</th>
+                            <th scope="col">Номер Телефона</th>
+                            <th scope="col">Консультант</th>
+                            <th scope="col">
+                                <button type="button" class="btn btn-danger">Удалить</button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        {% for post in call_post %}
+                            <tr class="call_center_row">
+                                <th scope="row">{{ post.visitor.id }}</th>
+                                <td>{{ post.visitor.visitor.name }}</td>
+                                <td>{{ post.visitor.date }}</td>
+                                <td>{{ post.visitor.filial }}</td>
+                                <td>{{ post.visitor.visitor.status }}</td>
+                                <td>{{ post.visitor.visitor.phone_number }}</td>
+                                <td>{{ post.visitor.consultant }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-success" data-toggle="modal"
+                                    >
+                                        <a onclick="getInfo({{ post.visitor.id }})">Изменить</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if  call_post.has_other_pages %}
+                        <ul class="pagination">
+                            {% if call_post.has_previous %}
+                                <li><a href="?page2={{ call_post.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in call_post.paginator.page_range %}
+                                {% if users.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% elif i > call_post.number|add:'-5' and i < call_post.number|add:'5' %}
+                                    <li><a href="?page2={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if call_post.has_next %}
+                                <li><a href="?page2={{ call_post.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- The Modal -->
+
+        <div class="myModal">
+            <button class="hide-modal float-right">X</button>
+            <div class="data-container">
+                <div class="container">
+                    <div class="r">
+                        <div class="border">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>Имя<input class="float-right md-name" type="text" value="Good" readonly>
+                                        </li>
+                                        <li>Номер телефона<input class="float-right md-number" type="text"
+                                                                 value="Good"
+                                                                 readonly></li>
+
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>Статус<input class="float-right md-status" type="text" value="Good"
+                                                         readonly>
+                                        </li>
+                                        <li>Характер<input class="float-right md-character" type="text" value="Good"
+                                                           readonly>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li>Нюансы<input class="float-right md-nuance" type="text" value="Good"
+                                             readonly>
+                            </li>
+                            <li>Дата<input class="float-right md-date" type="text" value="Good"
+                                           readonly></li>
+                            <li>Категория<input class="float-right md-category" type="text" value="Good"
+                                                readonly>
+                            </li>
+                            <li>Наименование <input class="float-right md-title" type="text" value="Good" readonly>
+                            </li>
+                            <li>Тип мебели<input class="float-right md-type" type="text" value="Good" readonly></li>
+                            <li>Модель мебели<input class="float-right md-model" type="text" value="Good" readonly>
+                            </li>
+                            <li>Цвет<input class="float-right md-color" type="text" value="Good" readonly></li>
+                            <li>Филиал<input class="float-right md-filial" type="text" value="Good" readonly></li>
+                            <li>Другие магазины<input class="float-right md-magazin" type="text" value="Good"
+                                                      readonly></li>
+                            <li>Консултант<input class="float-right md-consultant" type="text" value="Good"
+                                                 readonly></li>
+                            <li>Контент разговора <input class="float-right md-call-content" type="text" value="###"
+                                                         readonly style="height: 30px;"></li>
+                        </ul>
+                    </div>
+                    <form class="call-form" name="editForm" action="{% url 'post_call_content' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="col-md-12">
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="control-label" for="textinput">Информация</label>
+                                <input id="textinput" name="call_content" type="text" placeholder=""
+                                       class="form-control input-md">
+                                <input type="hidden" name="id" value="" class="ci_id">
+                            </div>
+                            <div class="s-button">
+                                <input id="submit-btn" type="submit" name="call_id" class="btn btn-success"
+                                       value="Отправить">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    {% block script %}
+        <script>
+            function getInfo(id) {
+
+
+                function httpGet(url) {
+
+                    return new Promise(function (resolve, reject) {
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', url, true);
+
+                        xhr.onload = function () {
+                            if (this.status == 200) {
+                                resolve(this.response);
+                            } else {
+                                var error = new Error(this.statusText);
+                                error.code = this.status;
+                                reject(error);
+                            }
+                        };
+
+                        xhr.onerror = function () {
+                            reject(new Error("Network Error"));
+                        };
+
+                        xhr.send();
+                    });
+
+                }
+
+                httpGet('/api/customer/' + id)
+                    .then(response => {
+                        let res = JSON.parse(response);
+                        console.log(res);
+                        console.log(res.visitors[0].id);
+                        $('.md-name').val(res.name);
+                        $('.md-number').val(res.phone_number);
+                        $('.md-character').val(res.character);
+                        $('.md-status').val(res.status);
+                        $('.md-nuance').val(res.nuance);
+                        $('.md-date').val(res.visitors[0].date);
+                        $('.md-category').val(res.visitors[0].category[0].name);
+                        $('.md-title').val(res.visitors[0].name_furniture);
+                        $('.md-type').val(res.visitors[0].type_furniture);
+                        $('.md-model').val(res.visitors[0].model_furniture);
+                        $('.md-color').val(res.visitors[0].color);
+                        $('.md-filial').val(res.visitors[0].filial.name);
+                        $('.md-magazin').val(res.visitors[0].other_shop);
+                        $('.md-consultant').val(res.visitors[0].consultant.name);
+                        if (res.visitors[0].callers.length > 0) {
+                            $('.md-call-content').val(res.visitors[0].callers[0].call_content);
+                        }
+                        $('.ci_id').val(res.id);
+                        $('.myModal').show();
+
+
+                    });
+            }
+
+            $(".hide-modal").click(function (e) {
+                $(".myModal").hide();
+            })
+
+        </script>
+
+    {% endblock %}
+
+    </div>
+{% endblock %}

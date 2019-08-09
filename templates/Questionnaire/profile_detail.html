@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+
+                 <div class="card" style="background-color:white; height: 100%;  width: 290px; z-index:0;" >
+                        <img src="{{ profile.image.url }}" width="290px" alt="">
+                             <ul>     Иззат
+                             <li> Номер телефона : 70676000</li>
+                            <li> Год Рождения : 1998.02.28</li>
+                             <li> Должность: Системный администратор</li></ul>
+                     </div>
+            </div>
+    <div class="col-md-9">
+        <div class="row">
+        <div class="col-md-4">
+        <div >
+            <canvas id="myChart" width="500" height="400"></canvas>
+        </div>
+        </div>
+        <div class="col-md-5">
+        <div >
+            <canvas id="myChart2" width="500" height="400"></canvas>
+        </div>
+        </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid">
+            <table class="table table-bordered " style="margin-top: 25px;">
+          <thead class="thead-dark" >
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Имя клиента</th>
+              <th scope="col">Дата</th>
+              <th scope="col">Филиал</th>
+              <th scope="col">Откуда Узнал</th>
+              <th scope="col">Номер Телефона</th>
+              <th scope="col">Характер</th>
+              <th scope="col">Статус</th>
+              <th scope="col">Другие магазины</th>
+              <th scope="col">Категория</th>
+              <th scope="col">Тип мебели </th>
+              <th scope="col">Цвет</th>
+              <th scope="col">Нюансы </th>
+              <th scope="col">Консультант </th>
+              <th scope="col">Добавлено </th>
+                <th scope="col"> <button type="button" class="btn btn-danger">Delete</button></th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+          {% for post in posts %}
+              <tr>
+              <th scope="row">{{ post.visitor.id }}</th>
+              <td>{{ post.visitor.name }}</td>
+              <td>{{ post.date }}</td>
+              <td>{{ post.filial }}</td>
+              <td>{{ post.find_out }}</td>
+              <td>{{ post.visitor.phone_number }}</td>
+              <td>{{ post.visitor.character }}</td>
+              <td>{{ post.visitor.status }}</td>
+              <td>{{ post.other_shop }}</td>
+              <td>{% for post in post.category.all %}{{ post }}{% endfor %}</td>
+              <td>{{ post.type_furniture }}</td>
+              <td>{{ post.color }}</td>
+              <td>{{ post.nuance }}</td>
+              <td>{{ post.consultant }}</td>
+              <td>{{ post.date_pub }}</td>
+              <td><input type="checkbox"></td>
+            </tr>
+           {% endfor %}
+  </tbody>
+</table>
+    </div>
+    </div>
+
+<script>
+var chartJS = {};
+var chart1 = document.getElementById('myChart').getContext('2d'),
+    chart2 = document.getElementById('myChart2').getContext('2d');
+
+var chartArr = {
+    chart1: {
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+            label: '# of Votes',
+            data: [{{ profile.id }},{{ profile.id }}, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255,1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+        },
+        type: "pie",
+        ctx: chart1
+    },
+
+    chart2: {
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+            label: '# of Votes',
+            data: [{{ profile.id }},{{ profile.id }}, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+        },
+        type: "bar",
+        ctx: chart2
+    },
+};
+
+for(var key in chartArr){
+    var item = chartArr[key];
+    if(chartArr.hasOwnProperty(key)) {
+        chartJS[item.type] = new Chart(item.ctx,{
+            type: item.type,
+            data: item.data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+}
+</script>
+
+{% endblock %}

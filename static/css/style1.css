@@ -1,0 +1,385 @@
+/*
+    DEMO STYLE
+*/
+a {
+    color: white !important;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.navbar {
+    padding: 15px 10px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+.side-btn {
+    width: 100%;
+    background-color: #2c3e50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: start;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.side-btn:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #2c3e50;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #343a40;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li.active > a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+ul ul a {
+    font-size: 1.1em !important;
+    padding-left: 30px !important;
+    background: white;
+    color: #000;
+    text-decoration: none;
+}
+
+ul.CTAs {
+    padding: 20px;
+}
+
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+a.download {
+    background: #fff;
+    color: black !important;
+}
+
+a.article,
+a.article:hover {
+    background: #6d7fcc !important;
+    color: #fff !important;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    background-color: white;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+
+    #sidebar.active {
+        margin-left: 0;
+    }
+
+    #sidebarCollapse span {
+        display: none;
+    }
+}
+
+nav .mega-dropdown {
+    width: 100%;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    background: #fff;
+    overflow: hidden;
+    padding: 20px 35px;
+    z-index: 2;
+}
+
+.nav-item {
+    margin-right: 25px;
+    font-size: 12px;
+
+}
+
+nav li .mega-dropdown a {
+    color: black !important;
+}
+
+nav li .mega-dropdown {
+    column-count: 5;
+    width: 100%;
+    display: none;
+}
+
+nav li:hover .mega-dropdown {
+    display: inline;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-cont {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border-top: 0;
+    min-width: 160px;
+    z-index: 1;
+    top: 35px;
+    padding: 20px 35px;
+}
+
+/* Links inside the dropdown */
+.dropdown-cont a {
+    color: black !important;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-cont a:hover {
+    background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-cont {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+
+.active-btn {
+    background-color: green;
+}
+
+.selected {
+    background-color: green;
+}
+
+.bigModal {
+    width: 220% !important;
+    margin-left: -260px;
+    height: 220% !important;
+
+}
+.table-bordered .tbody-statistik td input {
+    width: 30%;
+    float:right;
+}
+
+.table-bordered .tbody-statistik td {
+    height:auto;
+    width: auto;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+    padding: 5px !important;
+
+}
+
+
+.content {
+    min-height: 768px;
+    overflow: hidden;
+}
+
+.myModal {
+    position: fixed;
+    width: 60%;
+    min-height: 100px;
+    height: auto;
+    top: 10px;
+    left: 20%;
+    background-color: white;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    display: none;
+
+}
+
+.myModal button.hide-modal {
+    z-index: 1;
+    border: none;
+    background-color: #343A40;
+    color: white;
+    border-radius: 3px;
+    top: 10px;
+    position: absolute;
+    right: 10px;
+
+}
+
+.myModal .data-container ul {
+    list-style: none;
+    margin-top: 40px;
+}
+
+.myModal .data-container ul li {
+    padding: 5px;
+    font-size: 16px;
+    color: #777777;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+
+.myModal .s-button {
+    text-align: center;
+    padding: 0 40px 40px;
+    display: block;
+}
+
+.myModal .form-group {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.myModal input:read-only {
+    border: none;
+}
+
+.myModal input {
+    font-size: 20px;
+}
+
+.call-form {
+    width: 100%;
+}
+
+/*call center*/
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card-1:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-5 {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+.main-form-statistik{
+    position: inherit;
+    background: #333333;
+    width: 70%;
+    left:15%;
+    height:300px;
+}
