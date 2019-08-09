@@ -327,7 +327,7 @@ nav li:hover .mega-dropdown {
 
 .myModal .data-container ul {
     list-style: none;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .myModal .data-container ul li {
@@ -382,4 +382,26 @@ nav li:hover .mega-dropdown {
     width: 70%;
     left:15%;
     height:300px;
+}
+.in-flex{
+    display: flex;
+}
+.in-flex-cell{
+    flex: 1;
+}
+
+.myModal ul li span:nth-child(2){
+    color: black;
+}
+.myModal p{
+    padding-top: 10px;
+    width: 250px;
+    font-size: 20px;
+    margin:0 auto !important;
+}
+
+#call_content_tf{
+    display: block;
+    width: inherit;
+    height: auto;
 }

@@ -136,59 +136,75 @@
         <div class="myModal">
             <button class="hide-modal float-right">X</button>
             <div class="data-container">
-                <div class="container">
-                    <div class="r">
-                        <div class="border">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <ul>
-                                        <li>Имя<input class="float-right md-name" type="text" value="Good" readonly>
-                                        </li>
-                                        <li>Номер телефона<input class="float-right md-number" type="text"
-                                                                 value="Good"
-                                                                 readonly></li>
-
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <ul>
-                                        <li>Статус<input class="float-right md-status" type="text" value="Good"
-                                                         readonly>
-                                        </li>
-                                        <li>Характер<input class="float-right md-character" type="text" value="Good"
-                                                           readonly>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li><span>Имя</span><span id="md-name"></span>
+                                </li>
+                                <li><span>Номер телефона</span><span id="md-number" class="md-number"></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li><span>Статус</span><span id="md-status"></span>
+                                </li>
+                                <li><span>Характер</span><span id="md-character"></span></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <ul>
-                            <li>Нюансы<input class="float-right md-nuance" type="text" value="Good"
-                                             readonly>
-                            </li>
-                            <li>Дата<input class="float-right md-date" type="text" value="Good"
-                                           readonly></li>
-                            <li>Категория<input class="float-right md-category" type="text" value="Good"
-                                                readonly>
-                            </li>
-                            <li>Наименование <input class="float-right md-title" type="text" value="Good" readonly>
-                            </li>
-                            <li>Тип мебели<input class="float-right md-type" type="text" value="Good" readonly></li>
-                            <li>Модель мебели<input class="float-right md-model" type="text" value="Good" readonly>
-                            </li>
-                            <li>Цвет<input class="float-right md-color" type="text" value="Good" readonly></li>
-                            <li>Филиал<input class="float-right md-filial" type="text" value="Good" readonly></li>
-                            <li>Другие магазины<input class="float-right md-magazin" type="text" value="Good"
-                                                      readonly></li>
-                            <li>Консултант<input class="float-right md-consultant" type="text" value="Good"
-                                                 readonly></li>
-                            <li>Контент разговора <input class="float-right md-call-content" type="text" value="###"
-                                                         readonly style="height: 30px;"></li>
-                        </ul>
+                    <p><span>Дата</span> <span id="data-a"></span></p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul>
+                                <li><span>Нюансы</span> <span id="md-nuance"></span>
+                                </li>
+                                <li><span>Категория</span> <span id="md-category"></span>
+                                </li>
+                                <li><span>Наименование</span> <span id="md-title"></span>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="col-md-4">
+                            <ul>
+                                <li><span>Тип мебели</span><span id="md-type"></span></li>
+                                <li><span>Модель мебели</span><span id="md-model"></span>
+                                </li>
+                                <li><span>Цвет</span><span id="md-color"></span></li>
+
+
+                        </div>
+                        <div class="col-md-4">
+                            <ul>
+                                <li><span>Другие магазины</span><span id="md-magazin"></span></li>
+                                <li><span>Консултант</span> <span id="md-consultant"></span></li>
+                                <li><span>Филиал</span><span id="md-filial"></span></li>
+                            </ul>
+                            </ul>
+                        </div>
                     </div>
+                    <p><span>Дата</span> <span id="data-a"></span></p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <ul>
+                                <li><span id="md-call-center-name" style="color: black">Хамида</span></li>
+                            </ul>
+
+                        </div>
+                        <div class="col-md-9">
+                        <ul>
+                            <li><span>Контент разговора</span></li>
+                                <textfield id="call_content_tf"></textfield>
+
+                        </ul>
+
+
+
+                        </div>
+                    </div>
+
+
                     <form class="call-form" name="editForm" action="{% url 'post_call_content' %}" method="POST">
                         {% csrf_token %}
                         <div class="col-md-12">
@@ -215,8 +231,7 @@
     {% block script %}
         <script>
             function getInfo(id) {
-
-
+                $('#call_content_tf').text('');
                 function httpGet(url) {
 
                     return new Promise(function (resolve, reject) {
@@ -248,26 +263,25 @@
                         let res = JSON.parse(response);
                         console.log(res);
                         console.log(res.visitors[0].id);
-                        $('.md-name').val(res.name);
-                        $('.md-number').val(res.phone_number);
-                        $('.md-character').val(res.character);
-                        $('.md-status').val(res.status);
-                        $('.md-nuance').val(res.nuance);
-                        $('.md-date').val(res.visitors[0].date);
-                        $('.md-category').val(res.visitors[0].category[0].name);
-                        $('.md-title').val(res.visitors[0].name_furniture);
-                        $('.md-type').val(res.visitors[0].type_furniture);
-                        $('.md-model').val(res.visitors[0].model_furniture);
-                        $('.md-color').val(res.visitors[0].color);
-                        $('.md-filial').val(res.visitors[0].filial.name);
-                        $('.md-magazin').val(res.visitors[0].other_shop);
-                        $('.md-consultant').val(res.visitors[0].consultant.name);
+                        $('#md-name').text(res.name);
+                        $('#md-number').text(res.phone_number);
+                        $('#md-character').text(res.character);
+                        $('#md-status').text(res.status);
+                        $('#md-nuance').text(res.nuance);
+                        $('#data-a').text(res.visitors[0].date);
+                        $('#md-category').text(res.visitors[0].category[0].name);
+                        $('#md-title').text(res.visitors[0].name_furniture);
+                        $('#md-type').text(res.visitors[0].type_furniture);
+                        $('#md-model').text(res.visitors[0].model_furniture);
+                        $('#md-color').text(res.visitors[0].color);
+                        $('#md-filial').text(res.visitors[0].filial.name);
+                        $('#md-magazin').text(res.visitors[0].other_shop);
+                        $('#md-consultant').text(res.visitors[0].consultant.name);
                         if (res.visitors[0].callers.length > 0) {
-                            $('.md-call-content').val(res.visitors[0].callers[0].call_content);
+                            $('#call_content_tf').text(res.visitors[0].callers[0].call_content);
                         }
                         $('.ci_id').val(res.id);
                         $('.myModal').show();
-
 
                     });
             }
@@ -275,6 +289,7 @@
             $(".hide-modal").click(function (e) {
                 $(".myModal").hide();
             })
+
 
         </script>
 

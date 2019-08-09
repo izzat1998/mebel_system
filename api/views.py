@@ -137,7 +137,7 @@ class TenDaysGetCount(APIView):
         today = date.today()
         if (today.day >= 1 and today.day <= 10):
             step = timedelta(days=1)
-            while today.day >= 1:
+            while today.day > 1:
                 dates.append(today)
                 today -= step
         elif (today.day >= 11 and today.day <= 20):
