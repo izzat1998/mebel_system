@@ -13,7 +13,7 @@ class MainMenuView(View):
 
 class ShopView(View):
     def get(self, request):
-        customerInfo = CustomerInformation.objects.all()
+        customerInfo = CustomerInformation.objects.filter(visitors__callers=None)
         page = request.GET.get('page', 1)
         paginator = Paginator(customerInfo, 50)
         try:

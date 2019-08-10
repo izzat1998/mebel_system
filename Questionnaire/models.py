@@ -61,5 +61,9 @@ class Visited(models.Model):
     visitor = models.ForeignKey(CustomerInformation, on_delete=models.CASCADE, max_length=255, blank=True, null=True,
                                 related_name='visitors')
 
+    class Meta:
+        ordering = ['-date']
+
+
     def __str__(self):
-        return self.name_furniture
+        return str(self.date)

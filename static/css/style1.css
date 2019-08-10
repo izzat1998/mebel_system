@@ -389,7 +389,10 @@ nav li:hover .mega-dropdown {
 .in-flex-cell{
     flex: 1;
 }
-
+.myModal{
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+}
 .myModal ul li span:nth-child(2){
     color: black;
 }

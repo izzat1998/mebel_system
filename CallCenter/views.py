@@ -1,6 +1,7 @@
-from datetime import  datetime
+from datetime import datetime
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
@@ -15,7 +16,14 @@ from Questionnaire.models import CustomerInformation, Visited
 class GetCustomerInfo(View):
     def get(self, request):
 
-        post = Visited.objects.filter(callers=None)
+        # cal_set = set(CalCenterClient.objects.order_by('id').values('visitor'))
+        # all_visited = set(Visited.objects.order_by('id').values('visitor'))
+        # all_visited.discard(cal_set)
+        #
+        # print(all_visited)
+
+        names=[]
+        post = CustomerInformation.objects.all()
         page = request.GET.get('page', 1)
         paginator = Paginator(post, 10)
         try:
@@ -24,6 +32,7 @@ class GetCustomerInfo(View):
             post = paginator.page(1)
         except EmptyPage:
             post = paginator.page(paginator.num_pages)
+
         post2 = CalCenterClient.objects.all().order_by('-date_pub')
         page = request.GET.get('page2', 1)
         paginator = Paginator(post2, 10)
@@ -33,7 +42,7 @@ class GetCustomerInfo(View):
             post2 = paginator.page(1)
         except EmptyPage:
             post2 = paginator.page(paginator.num_pages)
-        return render(request, 'CallCenter/call_center.html', context={'post': post,'call_post':post2})
+        return render(request, 'CallCenter/call_center.html', context={'posts': post, 'call_post': post2})
 
 
 class PostCallContent(View):
@@ -43,9 +52,11 @@ class PostCallContent(View):
         call_content = CalCenterClient.objects.create(call_content=call)
         post = Visited.objects.get(id=ci_id)
         now = datetime.now()
-        post.date=now.strftime("%Y-%m-%d")
+        post.date = now.strftime("%Y-%m-%d")
         post.save()
-        call_content.visitor=post
+        call_content.visitor = post
         call_content.save()
+        post.visitor.is_called = True
+        post.visitor.save()
+        post.save()
         return HttpResponseRedirect(reverse('call_center'))
-
