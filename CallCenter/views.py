@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
@@ -15,15 +15,7 @@ from Questionnaire.models import CustomerInformation, Visited
 
 class GetCustomerInfo(View):
     def get(self, request):
-
-        # cal_set = set(CalCenterClient.objects.order_by('id').values('visitor'))
-        # all_visited = set(Visited.objects.order_by('id').values('visitor'))
-        # all_visited.discard(cal_set)
-        #
-        # print(all_visited)
-
-        names=[]
-        post = CustomerInformation.objects.all()
+        post = CustomerInformation.objects.filter(is_called=False, visitors__callers=None).distinct()
         page = request.GET.get('page', 1)
         paginator = Paginator(post, 10)
         try:

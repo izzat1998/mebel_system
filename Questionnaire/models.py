@@ -62,7 +62,7 @@ class Visited(models.Model):
                                 related_name='visitors')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['date']
 
 
     def __str__(self):

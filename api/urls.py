@@ -19,9 +19,10 @@ from django.urls import path, include
 
 from settings import settings
 from api.views import GetCustomerInformationApiView, GetCountCategoryApiView, GetCategoryCount, GetWhileCategoryCount, \
-    getDateCount, GetCustomerDetail, TenDaysGetCount
+    getDateCount, GetCustomerDetail, TenDaysGetCount, PostCustomerInformationApi
 
 urlpatterns = [
+    path('customer/post', PostCustomerInformationApi.as_view(), name='customer-post'),
     path('customer/<int:pk>', GetCustomerDetail.as_view(), name='customer-info'),
     path('customer/', GetCustomerInformationApiView.as_view(), name='customer-info'),
     path('ten_day_count/', TenDaysGetCount.as_view(), name='ten-day-count'),
