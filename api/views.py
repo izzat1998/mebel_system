@@ -34,14 +34,12 @@ class GetCustomerInformationApiView(generics.ListAPIView):
         return qs
 
 
-class PostCustomerInformationApi(generics.ListCreateAPIView):
+class PostCustomerInformationApi(generics.CreateAPIView):
     lookup_field = ''
     serializer_class = CustomerInformationCreateSerializer
     authentication_classes = []
     queryset = CustomerInformation.objects.all()
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
 
 class GetCustomerDetail(generics.RetrieveAPIView):

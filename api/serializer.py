@@ -84,9 +84,9 @@ class CustomerInformationCreateSerializer(serializers.ModelSerializer):
         c_i = CustomerInformation(**validated_data)
         phone_number= validated_data.pop('phone_number')
         print(phone_number)
-        if  CustomerInformation.objects.get(phone_number=phone_number):
-            print(phone_number)
-            c_i=CustomerInformation.objects.get(phone_number=phone_number)
+        # if  CustomerInformation.objects.get(phone_number=phone_number):
+        #     print(phone_number)
+        #     c_i=CustomerInformation.objects.get(phone_number=phone_number)
         c_i.save()
         cat_list = []
         for track_data in tracks_data:
