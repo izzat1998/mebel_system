@@ -11,19 +11,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from Questionnaire.models import CustomerInformation, Category, Filial, Visited
-from .serializer import CustomerInformationSerializer, GetCountCategorySerializer
+from .serializer import CustomerInformationSerializer, GetCountCategorySerializer, CustomerInformationCreateSerializer
 
 
 # Create your views here.
-class GetCustomerInformationApiView(mixins.CreateModelMixin, generics.ListAPIView):
+class GetCustomerInformationApiView(generics.ListAPIView):
     lookup_field = ''
     serializer_class = CustomerInformationSerializer
     authentication_classes = []
 
     def get_queryset(self):
         qs = CustomerInformation.objects.all()
-        if(self.request.GET.get('from')!=None and self.request.GET.get('to')!=None):
-            date_1=str(self.request.GET.get('from'))
+        if (self.request.GET.get('from') != None and self.request.GET.get('to') != None):
+            date_1 = str(self.request.GET.get('from'))
             date_2 = str(self.request.GET.get('to'))
             qs = CustomerInformation.objects.filter(visitors__date__range=[date_1, date_2])
         query = self.request.GET.get("q")
@@ -32,6 +32,13 @@ class GetCustomerInformationApiView(mixins.CreateModelMixin, generics.ListAPIVie
                 Q(name__icontains=query) | Q(phone_number__icontains=query) | Q(category__name__icontains=query) | Q(
                     date=query) | Q(status__contains=query)).distinct()
         return qs
+
+
+class PostCustomerInformationApi(generics.ListCreateAPIView):
+    lookup_field = ''
+    serializer_class = CustomerInformationCreateSerializer
+    authentication_classes = []
+    queryset = CustomerInformation.objects.all()
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -74,7 +81,7 @@ class GetWhileCategoryCount(APIView):
             for caty in categories:
                 counter = 0
                 category2.append(str(caty))
-                counter = Visited.objects.filter(category=caty,date__range=[date_1,date_2]).count()
+                counter = Visited.objects.filter(category=caty, date__range=[date_1, date_2]).count()
                 print(counter)
                 count.append(counter)
                 response = [{'category': t, 'count': s} for t, s in zip(category2, count)]
@@ -86,7 +93,7 @@ class GetWhileCategoryCount(APIView):
                 for cat in category_list:
                     if str(categ) == cat:
                         category2.append(cat)
-                        counter = Visited.objects.filter(category=categ,date__range=[date_1,date_2]).count()
+                        counter = Visited.objects.filter(category=categ, date__range=[date_1, date_2]).count()
                         count.append(counter)
             response = [{'category': t, 'count': s} for t, s in zip(category2, count)]
             return Response(response)
@@ -137,7 +144,7 @@ class TenDaysGetCount(APIView):
         today = date.today()
         if (today.day >= 1 and today.day <= 10):
             step = timedelta(days=1)
-            while today.day >= 1:
+            while today.day > 1:
                 dates.append(today)
                 today -= step
         elif (today.day >= 11 and today.day <= 20):
