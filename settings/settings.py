@@ -100,10 +100,25 @@ STATICFILES_DIRS = [
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+# python3 manage.py migrate --run-syncdb
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'b00emnueeltyuzg120ow-postgresql.services.clever-cloud.com',
+        'NAME': 'b00emnueeltyuzg120ow',
+        'USER': 'u3sp8mcxu6qgoz6rwva2',
+        'PASSWORD': 'oyO476UvnHeqZNdIT9B6',
+        'PORT': '5432',
     }
 }
 
@@ -169,5 +184,5 @@ DEBUG_TOOLBAR_CONFIG = {
     'RESULTS_CACHE_SIZE': 3,
     'SHOW_COLLAPSED': True,
     # Panel options
-    'SQL_WARNING_THRESHOLD': 100,   # milliseconds
+    'SQL_WARNING_THRESHOLD': 100,  # milliseconds
 }
