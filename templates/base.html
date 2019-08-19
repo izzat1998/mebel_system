@@ -52,7 +52,7 @@
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false"
                    class="dropdown-toggle">Категория</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
-                    {   % category as ez %}
+                    {% category as ez %}
                     {% for category in ez %}
                         <li>
                             <button class="side-btn ">{{ category }}</button>

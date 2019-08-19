@@ -6,6 +6,8 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=255, blank=True, default="")
 
+
+
     def __str__(self):
         return self.name
 
@@ -17,12 +19,16 @@ class Filial(models.Model):
         return self.name
 
 
+
+
 class Consultant(models.Model):
     name = models.CharField(max_length=255, blank=True, default="")
     image = models.ImageField(upload_to='images', blank=True, default='default.png')
 
     def __str__(self):
         return self.name
+
+
 
 
 class CustomerInformation(models.Model):
@@ -36,6 +42,7 @@ class CustomerInformation(models.Model):
 
     class Meta:
         ordering = ['-id']
+
 
     def __str__(self):
         return self.name
@@ -63,7 +70,6 @@ class Visited(models.Model):
 
     class Meta:
         ordering = ['date']
-
 
     def __str__(self):
         return str(self.date)

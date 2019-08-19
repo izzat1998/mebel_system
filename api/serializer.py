@@ -37,7 +37,7 @@ class VisitedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Visited
-        fields = ['category', 'consultant', 'filial', 'name_furniture', 'type_furniture',
+        fields = [ 'id', 'category', 'consultant', 'filial', 'name_furniture', 'type_furniture',
                   'model_furniture',
                   'color', 'nuance', 'date', 'other_shop',
                   'find_out', 'callers']

@@ -93,7 +93,7 @@
                                 <td>{{ post.visitor.consultant }}</td>
                                 <td>
                                     <button data-id="{% url 'post_call_content' post.id %}" type="button" class="btn btn-success fbtn" data-toggle="modal"
-                                            onclick="getInfo({{ post.visitor.id }}, 'modal2')"
+                                            onclick="getInfo({{ post.visitor.visitor.id }}, 'modal2')"
                                     >
                                         <a>Изменить</a>
                                     </button>
@@ -275,7 +275,7 @@
                         let res = JSON.parse(response);
                         console.log(res);
                         console.log("ci_id" + res.id);
-                        $('.ci_id').val(res.id);
+                        $('.ci_id').val(res.visitors[0].id);
                         $('.customer-info').text('');
                         $('.c-md-name').text(res.name);
                         $('.c-md-number').text(res.phone_number);
@@ -358,17 +358,7 @@
                                 '                    </div>\n');
 
 
-                            {#$('#data-a').text(res.visitors[0].date);#}
-                            {#$('#md-category').text(res.visitors[0].category[0].name);#}
-                            {#$('#md-title').text(res.visitors[0].name_furniture);#}
-                            {#$('#md-type').text(res.visitors[0].type_furniture);#}
-                            {#$('#md-model').text(res.visitors[0].model_furniture);#}
-                            {#$('#md-color').text(res.visitors[0].color);#}
-                            {#$('#md-filial').text(res.visitors[0].filial.name);#}
-                            {#$('#md-magazin').text(res.visitors[0].other_shop);#}
-                            {#$('#md-consultant').text(res.visitors[0].consultant.name);#}
-                            {#if (res.visitors[0].callers.length > 0) {#}
-                            {#    $('#call_content_tf').text(res.visitors[0].callers[0].call_content);#}
+
 
 
                             $(`.${elem}`).show();
