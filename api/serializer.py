@@ -8,7 +8,7 @@ from Questionnaire.models import Category, CustomerInformation, Visited, Consult
 class CallContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CalCenterClient
-        fields = ['call_content', 'date_pub']
+        fields = [ 'id','call_content', 'date_pub']
 
 
 class FilialSerializer(serializers.ModelSerializer):

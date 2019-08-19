@@ -9,5 +9,8 @@ class CalCenterClient(models.Model):
     call_center_name = models.CharField(max_length=255, default='Хамида')
     date_pub = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.call_content

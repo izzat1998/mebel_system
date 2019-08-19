@@ -23,37 +23,38 @@
                         </thead>
                         <tbody id="tbody">
                         {% for post in posts %}
-                                <tr class="call_center_row">
-                                    <th scope="row">{{ post.id }}</th>
-                                    <td>{{ post.name }}</td>
-                                    <td>{{ post.status }}</td>
-                                    <td>{{ post.phone_number }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="getInfo({{ post.id }})">
-                                            <a id="{{ post.id }}">Инфо</a>
-                                        </button>
-                                    </td>
-                                </tr>
+                            <tr class="call_center_row">
+                                <th scope="row">{{ post.id }}</th>
+                                <td>{{ post.name }}</td>
+                                <td>{{ post.status }}</td>
+                                <td>{{ post.phone_number }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="getInfo({{ post.id }}, 'modal1')">
+                                        <a id="{{ post.id }}">Инфо</a>
+                                    </button>
+                                </td>
+                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>
 
-                    {% if  post.has_other_pages %}
+                    {% if  posts.has_other_pages %}
                         <ul class="pagination">
-                            {% if post.has_previous %}
-                                <li><a href="?page={{ post.previous_page_number }}">&laquo;</a></li>
+                            {% if posts.has_previous %}
+                                <li><a href="?page={{ posts.previous_page_number }}">&laquo;</a></li>
                             {% else %}
                                 <li class="disabled"><span>&laquo;</span></li>
                             {% endif %}
-                            {% for i in post.paginator.page_range %}
+                            {% for i in posts.paginator.page_range %}
                                 {% if users.number == i %}
                                     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                                {% elif i > post.number|add:'-5' and i < post.number|add:'5' %}
+                                {% elif i > posts.number|add:'-5' and i < posts.number|add:'5' %}
                                     <li><a href="?page={{ i }}">{{ i }}</a></li>
                                 {% endif %}
                             {% endfor %}
-                            {% if post.has_next %}
-                                <li><a href="?page={{ post.next_page_number }}">&raquo;</a></li>
+                            {% if posts.has_next %}
+                                <li><a href="?page={{ posts.next_page_number }}">&raquo;</a></li>
                             {% else %}
                                 <li class="disabled"><span>&raquo;</span></li>
                             {% endif %}
@@ -91,9 +92,10 @@
                                 <td>{{ post.visitor.visitor.phone_number }}</td>
                                 <td>{{ post.visitor.consultant }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-success" data-toggle="modal"
+                                    <button data-id="{% url 'post_call_content' post.id %}" type="button" class="btn btn-success fbtn" data-toggle="modal"
+                                            onclick="getInfo({{ post.visitor.id }}, 'modal2')"
                                     >
-                                        <a onclick="getInfo({{ post.visitor.id }})">Изменить</a>
+                                        <a>Изменить</a>
                                     </button>
                                 </td>
                             </tr>
@@ -125,27 +127,25 @@
                 </div>
             </div>
         </div>
-
-
         <!-- The Modal -->
-
-        <div class="myModal">
+        <!--Create-->
+        <div class="myModal def-modal modal1">
             <button class="hide-modal float-right">X</button>
             <div class="data-container">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
                             <ul>
-                                <li><span>Имя</span><span id="md-name"></span>
+                                <li><span>Имя</span><span class="c-md-name"></span>
                                 </li>
-                                <li><span>Номер телефона</span><span id="md-number" class="md-number"></span></li>
+                                <li><span>Номер телефона</span><span class="c-md-number"></span></li>
                             </ul>
                         </div>
                         <div class="col-md-6">
                             <ul>
-                                <li><span>Статус</span><span id="md-status"></span>
+                                <li><span>Статус</span><span class="c-md-status"></span>
                                 </li>
-                                <li><span>Характер</span><span id="md-character"></span></li>
+                                <li><span>Характер</span><span class="c-md-character"></span></li>
                             </ul>
                         </div>
                     </div>
@@ -172,16 +172,77 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="myModal def-modal modal2">
+            <button class="hide-modal float-right">X</button>
+            <div class="data-container">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li><span>Имя2</span><span class="c-md-name"></span>
+                                </li>
+                                <li><span>Номер телефона</span><span class="c-md-number"></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li><span>Статус</span><span class="c-md-status"></span>
+                                </li>
+                                <li><span>Характер</span><span class="c-md-character"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="customer-info">
+
+                    </div>
 
 
+                    <form  id="update-form-call-content" class="call-form" name="editForm"  method="GET">
+                        {% csrf_token %}
+                        <div class="col-md-12">
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="control-label" for="textinput">Информация</label>
+                                <input id="textinput" name="call_content" type="text" placeholder=""
+                                       class="form-control input-md">
+                                <input type="hidden" name="id" value="" class="ci_id">
+                            </div>
+                            <div class="s-button">
+                                <input id="submit-btn" type="submit" name="call_id" class="btn btn-success modal-fbtn"
+                                       value="Изменить">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
+
+
     {% block script %}
         <script>
-            function getInfo(id) {
+            $(function () {
+                {#$(".modal-fbtn").click(function (e) {#}
+                {#    e.preventDefault();#}
+                {#    let formData=new FormData();#}
+                {#    formData.append("post",$)#}
+                {##}
+
+
+                $(".fbtn").click(function (e) {
+                    e.preventDefault();
+                    {#e.stopPropagation();#}
+                    {#$(".modal-fbtn").attr("data-url", $(this).data("id"));#}
+                    $("#update-form-call-content").attr("action", $(this).data("id"))
+
+                })
+            })
+        </script>
+        <script>
+            function getInfo(id, elem) {
                 $('#call_content_tf').text('');
-                console.log("working");
 
                 function httpGet(url) {
 
@@ -215,15 +276,38 @@
                         console.log(res);
                         console.log("ci_id" + res.id);
                         $('.ci_id').val(res.id);
-                        $(".customer-info").text('');
-                        res.visitors.length
-                        $('#md-name').text(res.name);
-                        $('#md-number').text(res.phone_number);
-                        $('#md-character').text(res.character);
-                        $('#md-status').text(res.status);
-                        $('#md-nuance').text(res.nuance);
-                        for (i = 0; i < res.visitors.length; i++)
-                            $(".customer-info").append('                      <p><span>Дата</span> <span id="data-a">' + res.visitors[i].date + '</span></p>\n' +
+                        $('.customer-info').text('');
+                        $('.c-md-name').text(res.name);
+                        $('.c-md-number').text(res.phone_number);
+                        $('.c-md-character').text(res.character);
+                        $('.c-md-status').text(res.status);
+                        $('.c-md-nuance').text(res.nuance);
+
+                        var call_content = "########";
+
+
+                        var today = new Date();
+                        var dd = today.getDate();
+
+                        var mm = today.getMonth() + 1;
+                        var yyyy = today.getFullYear();
+                        if (dd < 10) {
+                            dd = '0' + dd;
+                        }
+
+                        if (mm < 10) {
+                            mm = '0' + mm;
+                        }
+                        today = yyyy + '-' + mm + '-' + dd;
+
+
+                        for (i = 0; i < res.visitors.length; i++) {
+                            for (j = 0; j < res.visitors[i].callers.length; j++) {
+                                if (res.visitors[i].callers[i] != null) {
+                                    call_content = res.visitors[i].callers[i].call_content
+                                }
+                            }
+                            $(".customer-info").append('                      <p><span style="color:red;">Дата </span> <span  id="data-a" style="color:red;">' + res.visitors[i].date + '</span></p>\n' +
                                 '                    <div class="row">\n' +
                                 '                        <div class="col-md-4">\n' +
                                 '                            <ul>\n' +
@@ -254,7 +338,7 @@
                                 '                            </ul>\n' +
                                 '                        </div>\n' +
                                 '                    </div>\n' +
-                                '                    <p><span>Дата</span>' + res.visitors[i].date + ' <span id="data-a"></span></p>\n' +
+                                '                    <p><span style="color:blue;">Дата </span><span style="color:blue;" id="data-a">' + today + ' </span></p>\n' +
                                 '                    <div class="row">\n' +
                                 '                        <div class="col-md-3">\n' +
                                 '                            <ul>\n' +
@@ -265,7 +349,7 @@
                                 '                        <div class="col-md-9">\n' +
                                 '                            <ul>\n' +
                                 '                                <li><span>Контент разговора</span></li>\n' +
-                                '                                <textfield id="call_content_tf"></textfield>\n' +
+                                '                                <textfield id="call_content_tf">' + call_content + '</textfield>\n' +
                                 '\n' +
                                 '                            </ul>\n' +
                                 '\n' +
@@ -274,26 +358,28 @@
                                 '                    </div>\n');
 
 
-                        {#$('#data-a').text(res.visitors[0].date);#}
-                        {#$('#md-category').text(res.visitors[0].category[0].name);#}
-                        {#$('#md-title').text(res.visitors[0].name_furniture);#}
-                        {#$('#md-type').text(res.visitors[0].type_furniture);#}
-                        {#$('#md-model').text(res.visitors[0].model_furniture);#}
-                        {#$('#md-color').text(res.visitors[0].color);#}
-                        {#$('#md-filial').text(res.visitors[0].filial.name);#}
-                        {#$('#md-magazin').text(res.visitors[0].other_shop);#}
-                        {#$('#md-consultant').text(res.visitors[0].consultant.name);#}
-                        {#if (res.visitors[0].callers.length > 0) {#}
-                        {#    $('#call_content_tf').text(res.visitors[0].callers[0].call_content);#}
+                            {#$('#data-a').text(res.visitors[0].date);#}
+                            {#$('#md-category').text(res.visitors[0].category[0].name);#}
+                            {#$('#md-title').text(res.visitors[0].name_furniture);#}
+                            {#$('#md-type').text(res.visitors[0].type_furniture);#}
+                            {#$('#md-model').text(res.visitors[0].model_furniture);#}
+                            {#$('#md-color').text(res.visitors[0].color);#}
+                            {#$('#md-filial').text(res.visitors[0].filial.name);#}
+                            {#$('#md-magazin').text(res.visitors[0].other_shop);#}
+                            {#$('#md-consultant').text(res.visitors[0].consultant.name);#}
+                            {#if (res.visitors[0].callers.length > 0) {#}
+                            {#    $('#call_content_tf').text(res.visitors[0].callers[0].call_content);#}
 
 
-                        $('.myModal').show();
-
+                            $(`.${elem}`).show();
+                        }
                     });
             }
 
             $(".hide-modal").click(function (e) {
-                $(".myModal").hide();
+                $(".def-modal").hide();
+
+
             })
 
 

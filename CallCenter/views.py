@@ -15,7 +15,7 @@ from Questionnaire.models import CustomerInformation, Visited
 
 class GetCustomerInfo(View):
     def get(self, request):
-        post = CustomerInformation.objects.filter(is_called=False, visitors__callers=None).distinct()
+        post = CustomerInformation.objects.filter(is_called=False).distinct()
         page = request.GET.get('page', 1)
         paginator = Paginator(post, 10)
         try:
@@ -43,12 +43,17 @@ class PostCallContent(View):
         ci_id = request.POST.get('id')
         call_content = CalCenterClient.objects.create(call_content=call)
         post = Visited.objects.get(id=ci_id)
-        now = datetime.now()
-        post.date = now.strftime("%Y-%m-%d")
-        post.save()
         call_content.visitor = post
         call_content.save()
         post.visitor.is_called = True
         post.visitor.save()
         post.save()
+        return HttpResponseRedirect(reverse('call_center'))
+
+
+class UpdateCallContent(View):
+    def get(self,request, id):
+        call_content=CalCenterClient.objects.get(id=id)
+        call_content.call_content=request.GET.get('call_content')
+        call_content.save()
         return HttpResponseRedirect(reverse('call_center'))
