@@ -4,9 +4,15 @@ from django.db import models
 
 
 class Category(models.Model):
+    is_selled = models.BooleanField(default=False, blank=True)
     name = models.CharField(max_length=255, blank=True, default="")
 
+    def __str__(self):
+        return self.name
 
+
+class NameFurniture(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -19,16 +25,12 @@ class Filial(models.Model):
         return self.name
 
 
-
-
 class Consultant(models.Model):
     name = models.CharField(max_length=255, blank=True, default="")
     image = models.ImageField(upload_to='images', blank=True, default='default.png')
 
     def __str__(self):
         return self.name
-
-
 
 
 class CustomerInformation(models.Model):
@@ -42,6 +44,39 @@ class CustomerInformation(models.Model):
 
     class Meta:
         ordering = ['-id']
+    @property
+    def dates(self):
+        dates=[]
+        for visit in self.visitors.all():
+            dates.append(visit.date)
+        return dates
+
+    @property
+    def filials(self):
+        filials=[]
+        for visit in self.visitors.all():
+            filials.append(visit.filial.name)
+        return filials
+    @property
+    def categories(self):
+        categories=[]
+        for visit in self.visitors.all():
+            for cat in visit.category.all():
+                categories.append(cat)
+        return categories
+    @property
+    def names_furnitures(self):
+        name_furnitures=[]
+        for visit in self.visitors.all():
+            for nmf in visit.name_furniture.all():
+                name_furnitures.append(nmf)
+        return name_furnitures
+
+
+
+
+
+
 
 
     def __str__(self):
@@ -51,7 +86,7 @@ class CustomerInformation(models.Model):
 class Visited(models.Model):
     # About Furniture
     category = models.ManyToManyField(Category, blank=True, related_name='post_category')
-    name_furniture = models.CharField(max_length=255, blank=True, default="")
+    name_furniture = models.ManyToManyField(NameFurniture, blank=True, related_name='name_furnitures')
     type_furniture = models.CharField(max_length=255, blank=True, default="")
     model_furniture = models.CharField(max_length=255, blank=True, default="")
     color = models.CharField(max_length=255, blank=True, default="")
@@ -69,7 +104,7 @@ class Visited(models.Model):
                                 related_name='visitors')
 
     class Meta:
-        ordering = ['date']
+        ordering = ['id']
 
     def __str__(self):
         return str(self.date)

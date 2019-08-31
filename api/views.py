@@ -11,7 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from Questionnaire.models import CustomerInformation, Category, Filial, Visited
-from .serializer import CustomerInformationSerializer, GetCountCategorySerializer, CustomerInformationCreateSerializer
+from .serializer import CustomerInformationSerializer, GetCountCategorySerializer, CustomerInformationCreateSerializer, \
+    CustomerInformationUpdateSerializer
 
 
 # Create your views here.
@@ -40,6 +41,11 @@ class PostCustomerInformationApi(generics.CreateAPIView):
     authentication_classes = []
     queryset = CustomerInformation.objects.all()
 
+
+class GetCustomerDetailUpdate(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = CustomerInformationUpdateSerializer
+    queryset = CustomerInformation.objects.all()
 
 
 class GetCustomerDetail(generics.RetrieveAPIView):

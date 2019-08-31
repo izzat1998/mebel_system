@@ -44,9 +44,8 @@ class QuestionnaireView(View):
         if request.POST.get('from') and request.POST.get('to'):
             fr = request.POST.get('from')
             to = request.POST.get('to')
-            print(fr,to)
             post=CustomerInformation.objects.filter(visitors__date__range=[fr,to])
-            print(post)
+
             page = request.GET.get('page', 1)
             paginator = Paginator(post, 50)
             try:

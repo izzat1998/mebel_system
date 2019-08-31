@@ -33,9 +33,6 @@ from Questionnaire.models import CustomerInformation, Visited
 class GetCustomerInfo(View):
     def get(self, request):
         post = CustomerInformation.objects.filter(is_called=False).distinct()
-
-        post = CustomerInformation.objects.filter(is_called=False)
-
         page = request.GET.get('page', 1)
         paginator = Paginator(post, 10)
         try:
@@ -45,9 +42,9 @@ class GetCustomerInfo(View):
         except EmptyPage:
             post = paginator.page(paginator.num_pages)
 
-        post2 = CalCenterClient.objects.order_by('visitor__visitor_id').distinct()
-        print(post2)
+        post2 = CalCenterClient.objects.order_by('visitor__visitor_id')
 
+        print(post2)
         print(post2)
         page = request.GET.get('page2', 1)
         paginator = Paginator(post2, 10)
