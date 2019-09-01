@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'CallCenter',
     'corsheaders',
     'debug_toolbar',
+    'Mebel_system',
 ]
 
 MIDDLEWARE = [
@@ -88,7 +89,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.wsgi.application'
+WSGI_APPLICATION = 'Mebel_system.wsgi.application'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
